@@ -1,5 +1,6 @@
 # imorting the module
 import cv2
+import imutils
 
 # function to display the coordinates of
 # the points clicked on the image
@@ -43,24 +44,29 @@ def click_event(event, x, y, flags, params):
     if event == cv2.EVENT_MBUTTONDOWN:
         print('middle mouse button pressed')
 
+    # track mouse position
+    if event == cv2.EVENT_MOUSEMOVE:
+        return
+        # print(x, '', y)
+
+
 def resize():
-    scale_percent = 60 # percent of original size
+    scale_percent = 20 # percent of original size
     width = int(img.shape[1] * scale_percent / 100)
     height = int(img.shape[0] * scale_percent / 100)
-    # dim = (width, height)
-    dim = (1200, 1697)
+    dim = (width, height)
+    # dim = (1200, 1697)
 
     resized = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
     cv2.imshow('image', resized)
 
-
-# # driver function
 # if __name__ == "__main__":
 #     # reading the image
 
 #     # img = cv2.imread('panzoom executing.png', 1) # for test
 
-#     img = cv2.imread('INBG_01_01.jpg', 1)
+#     img = cv2.imread('images/INBG_01_01.jpg', 1)
+#     print(type(img))
 
 #     # displaying the image
 #     # cv2.imshow('image', img)
@@ -75,6 +81,3 @@ def resize():
 
 #     # close the window
 #     cv2.destroyAllWindows()
-
-#     cv2.namedWindow('image')
-#     cv2.moveWindow('image', 20, 20)
