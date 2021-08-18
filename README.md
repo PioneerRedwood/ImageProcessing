@@ -28,7 +28,7 @@ If you want to make it automatically, build and compile to .exe file
 And execute in server-side
 
 
-#### End of project
+### End of project
 - Getting coordinates of image                           => using opencv in python (cv2)
 - Handling image pages                                   => using imutils module
 - Tracking them with adding, getting, deleting, editing  => using tkinter for UI
