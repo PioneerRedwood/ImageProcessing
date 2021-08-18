@@ -26,3 +26,10 @@ you can choose additional string tag or variable names ...
 #### Notice
 If you want to make it automatically, build and compile to .exe file 
 And execute in server-side
+
+
+#### End of project
+- Getting coordinates of image                           => using opencv in python (cv2)
+- Handling image pages                                   => using imutils module
+- Tracking them with adding, getting, deleting, editing  => using tkinter for UI
+- End of project, because of the gap of coordinates between real image and redered image

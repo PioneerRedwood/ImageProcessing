@@ -2,18 +2,22 @@
 from SelectionTracker import SelectionTracker
 import cv2
 import imutils
+from tkinter import *
 
 class ImageHandler:
     windowName = 'ImageProcessing'
     filePath = ''
     tracker = SelectionTracker()
 
+    # root = Tk()
+    # root.title('stored position')
+
     page = 0
     # width: 1200px, height: 1697px
     yPos = [0, 1697]
 
     dataType = {'N':'None', 'D':'Data', 'C':'Check', 'S':'Signature'}
-    currType = ''
+    currType = 'None'
 
     def __init__(self, img):
         # click_eve
@@ -29,10 +33,12 @@ class ImageHandler:
         cv2.setMouseCallback(self.windowName, self.click_event, params)
 
         cv2.imshow(self.windowName, self.resize(img))
-        
+
+        # self.tracker.root.mainloop()
+
         self.loop()
 
-        cv2.destroyAllWindows()
+        self.destroy()
 
     def loop(self):
         while True:
@@ -75,9 +81,11 @@ class ImageHandler:
         # width = int(img.shape[1] * scale_percent / 100)
         # height = int(img.shape[0] * scale_percent / 100)
         # dim = (width, height)
+        print('width;' , (img.shape[1]), 'height;' , (img.shape[0]))
         dim = (1200, 1697)
-
-        return cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+        # dim = (1358, 1920)
+        
+        return cv2.resize(img, dim, interpolation=cv2.INTER_BITS)
 
     def click_event(self, event, x, y, flags, params):
         # mouse scroll function
@@ -93,16 +101,24 @@ class ImageHandler:
 
         # checking for left mouse clicks
         if event == cv2.EVENT_LBUTTONDOWN:
-            strClickInfo = self.currType + ': ' + str(x) + ' ' + str(y)
+            strClickInfo = self.currType + ' : ' + str(x) + ' ' + str(y)
             print(strClickInfo)
 
             # extract where do you pick
-            # font = cv2.FONT_HERSHEY_SIMPLEX
-            # cv2.putText(params[0], str(x) + ',' + 
-            #             str(y), (x,y), font,
-            #             1, (255, 0, 0), 2)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(params[0], str(x) + ',' + 
+                        str(y), (x,y), font,
+                        1, (255, 0, 0), 2)
+
+            # cv2.circle(params[0], (x, y), 1, (255, 0, 0), 3)
+            if self.page == 0:
+                cv2.imshow(self.windowName, self.resize(imutils.translate(params[0], 0, self.yPos[0])))
+            else:
+                cv2.imshow(self.windowName, self.resize(imutils.translate(params[0], 0, -self.yPos[1])))                
+
             self.tracker.add(strClickInfo)
             self.tracker.show()
+            self.currType = 'None'
 
         # checking for right mouse clicks
         elif event == cv2.EVENT_RBUTTONDOWN:
@@ -125,12 +141,23 @@ class ImageHandler:
         # track mouse position
         elif event == cv2.EVENT_MOUSEMOVE:
             return
-    
-    def set_tracker(self, tracker):
-        self.tracker = tracker
-    
-    def get_tracker(self):
-        return self.tracker;
 
     def destroy(self):
         cv2.destroyAllWindows()
+
+    # update stored position
+    def update_tk(self):
+
+        for str in self.tracker.stored:
+            # for each stored info, make a functional frame
+            #   text, delete button 
+            frame = Frame(self.root, relief=SOLID, bd=1)
+            frame.pack(side='top', fill='both', expand=True)
+
+            label = Label(frame, text=str, anchor='w')
+            rmBtn = Button(frame, text='Del', command=lambda: frame.pack_forget())
+
+            label.pack()
+            rmBtn.pack()
+
+
